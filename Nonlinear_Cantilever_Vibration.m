@@ -203,7 +203,7 @@ for j=1:k
         end
         %second nonlinear stiffness matrix      
         if j == 1           
-            WPsq2Dot= UL; %approx. with lin. disp.    
+            WPsq2Dot= zeros(1000,1); %approx. with lin. disp.    
         else
             a1= 1;
             b0= 0;               

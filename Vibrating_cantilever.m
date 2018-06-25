@@ -41,6 +41,7 @@ for i=1:n_elements
     K(1+2*(i-1):1+2*(i-1)+3,1+2*(i-1):1+2*(i-1)+3) = K(1+2*(i-1):1+2*(i-1)+3,1+2*(i-1):1+2*(i-1)+3) + k;
 
 end
+
 %Global mass matrix
 M = zeros(n_dofs, n_dofs);
 for i=1:n_elements
@@ -69,8 +70,8 @@ d = [0; 0; d];
 %plot(d(1:2:end))
     
     n_dofs = 20;
-    dydt = zeros(2*n_dofs-4,1)
+    dydt = zeros(2*n_dofs-4,1);
     dydt(1:n_dofs-2) = y(n_dofs-1:2*n_dofs-4);
-    dydt(n_dofs-1:end) = M\(F - K *y(1:n_dofs-2))
+    dydt(n_dofs-1:end) = M\(F - K *y(1:n_dofs-2));
 end
 
