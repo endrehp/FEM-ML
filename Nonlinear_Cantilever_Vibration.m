@@ -102,7 +102,8 @@ for ll=1:N
         FD(i1,1)= FF(i1+2);   
     end
 end
-UL(:,1)= zeros(z,1);   %from IC 
+UL= zeros(z,k);   %from IC
+ULin = zeros(z,k);
 time= 0:deltat:tf; %time vector
 
 %Main loop 
@@ -133,9 +134,11 @@ for j=1:k
     for i=1:z     
         for p=1:j+1      
             if i<= 2         
-                UL(i,p)=0;       
+                UL(i,p)=0;     
+                %ULin(i,p)=0;
             else
-                UL(i,p)= ULr(i-2,p);           
+                UL(i,p)= ULr(i-2,p);
+                %ULin(i,p) = ULr(i-2,p);
             end
         end
     end
@@ -144,6 +147,13 @@ for j=1:k
     eps= 10^5; 
     counter= 0;    
     while eps > TOL  
+        
+        if counter == 0
+           
+            ULin(3:end,j) = U2;  
+            
+        end
+        
         %first nonlinear stiffness matrix           
         a1= 1;
         b0= 0;               
@@ -203,7 +213,7 @@ for j=1:k
         end
         %second nonlinear stiffness matrix      
         if j == 1           
-            WPsq2Dot= UL; %approx. with lin. disp.    
+            WPsq2Dot= zeros(1000,1); %approx. with lin. disp.    
         else
             a1= 1;
             b0= 0;               
@@ -377,7 +387,7 @@ for j=1:k
     end
     kounter(j)=counter; %number of iterations in NL loop   
     EPS(j)= eps; %convergence variable for each time step    
-    time(j) 
+     
 end
 %time response plots 
 Response_base= UL(3,:); %response of base (2nd node) 
