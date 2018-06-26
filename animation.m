@@ -1,13 +1,13 @@
 close all
 
 
-for i=1:length(UNL_total(1,:))
+for i=1:10:length(UNL_total(1,:))
     
     cla
     clf
    
     ul = ULin(1:2:end, i);
-    unl = UNL_total(1:2:end, i);
+    unl = UNL(1:2:end, i);
     
     %f = FNLin(1:2:end, i)*0.1;
     
@@ -20,7 +20,7 @@ for i=1:length(UNL_total(1,:))
     axis([0 25 -0.03 0.03])
     
     drawnow
-    pause(0.01)
+    %pause(0.01)
     
 
 end

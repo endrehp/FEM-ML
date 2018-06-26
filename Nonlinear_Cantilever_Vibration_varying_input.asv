@@ -111,9 +111,9 @@ time= 0:deltat:tf; %time vector
 %Main loop 
 for j=1:k     
     
-    if mod(j,100)==0
-        disp(j);
-    end
+    %if mod(j,100)==0
+    disp(j);
+    %end
     %Linear loop     
     for o=1:z-2       
         for p=1:j     
@@ -123,8 +123,8 @@ for j=1:k
     if j==1  
         U0= ULr(:,1); 
         U1= ULr(:,1);  
-        F0= ones(z-2,1)*0.0001;       
-        FLin(:,j)= ones(z-2,1)*0.0001;%PHI*FD*cos(THETA*time(j));   
+        F0= zeros(z-2,1);       
+        FLin(:,j)= zeros(z-2,1);%PHI*FD*cos(THETA*time(j));   
         F1= FLin(:,j);   
     else
         U0= ULr(:,j-1); 
@@ -132,7 +132,7 @@ for j=1:k
         F0= FLin(:,j-1); 
         F1= FLin(:,j);   
     end
-    FLin(:,j+1)= 0.0001*ones(z-2,1);%PHI*FD*cos(THETA*time(j+1)); 
+    FLin(:,j+1)= zeros(z-2,1);%PHI*FD*cos(THETA*time(j+1)); 
     F2= FLin(:,j+1); 
     F= Beta*F2 + epsilon*F1 + delta*F0;   
     U2= -inv(A1)*A2*U1 - inv(A1)*A3*U0 + deltat^2*inv(A1)*F;  
@@ -391,9 +391,9 @@ for j=1:k
          UL(:,j+1)= UNL(:,j+1);    
          counter=counter +1;
          
-         %if mod(counter,1000)
-         %   disp(eps)
-         %end
+         if mod(counter,1000)
+            disp(eps)
+         end
     end
     kounter(j)=counter; %number of iterations in NL loop   
     EPS(j)= eps; %convergence variable for each time step    
