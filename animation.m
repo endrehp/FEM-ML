@@ -1,18 +1,18 @@
 close all
 
 
-for i=1:10:length(UNL_total(1,:))
+for i=1:20:length(UNL(1,:))
     
     cla
     clf
    
-    ul = ULin(1:2:end, i);
+    %ul = ULin(1:2:end, i);
     unl = UNL(1:2:end, i);
     
     %f = FNLin(1:2:end, i)*0.1;
     
     hold on
-    plot(ul, 'o')
+    %plot(ul, 'o')
     plot(unl)
     %plot(f)
     %plot((unl-ul).^2)

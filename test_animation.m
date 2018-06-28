@@ -1,14 +1,14 @@
 close all
 
-x = linspace(0,1, length(preds(1,:)));
+x = linspace(0,1, length(predictions(1,:)));
 d_max = max(max(UNL_total));
-for i=1:length(preds(:,1))
+for i=1:length(predictions(:,1))
     
     cla
     clf
    
     p_d = predictions(i, :); %dependent predictions
-    p_i = preds(i, :); %independent predictions
+    %p_i = preds(i, :); %independent predictions
     y_t = y_test(i,:); %test data
     %ul = UL_total(1:2:end, end-length(preds(:,1))+i)/d_max; %linear solution
     
@@ -20,10 +20,10 @@ for i=1:length(preds(:,1))
     %plot(x, ul, '-x')
     %plot((unl-ul).^2)
     %disp(max((unl-ul).^2))
-    axis([0 1.2 -0.4 0.4])
+    axis([0 1.2 -1 1])
     %legend('show')
     drawnow
-    pause(0.01)
+    pause(0.1)
     
 
 end

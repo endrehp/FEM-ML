@@ -1,13 +1,16 @@
 %Nonlinear Vibration of a Cantilever Beam 
 L= 0.662; W= 0.01271; tk= 5.5e-4; %beam dimensions 
 rho = 7400; E = 165.5e9; %Material properties
-Alpha1= 0.064; Alpha2= 4.72e-5; %proportional damping coefficients 
+Alpha1= 0.4; %0.064; 
+Alpha2= 0.004;%4.72e-5; %proportional damping coefficients 
 N= 20; h= L/N; numX=10; deltax= h/numX; %elements variables 
 TOL=0.01; %convergence criterion for nonlinear loop 
 deltat= 0.001;  %tf=3;
 k= tf/deltat; %time variables 
 g=9.81; ab= 2.97*g; %OMEGA= 17.547; %force variables 
 Area= W*tk;  I= 1/12*W*tk^3; %section properties 
+
+%f_constant = 0.0001;
 
 %shape functions and derivatives 
 xs=0:deltax:h; 
@@ -106,10 +109,18 @@ end
 UL= zeros(z,k);   %from IC
 %UL(:,1) = linspace(0,0.01,z);
 ULin = zeros(z,k);
+FLin = zeros(z-2,k+1);
+FNLin = zeros(z-2,k+1);
+UNL = zeros(z,k);
+UNLin = zeros(z,k);
 time= 0:deltat:tf; %time vector
 
 %Main loop 
 for j=1:k     
+    
+    %Fg = PHI*FD*cos(THETA*time(j));
+    %Fg = ones(z-2,1)*f_constant; Fg(2:2:end) = 0;
+    Fg = zeros(z-2,1); Fg(end-1,1)=f_constant*20;
     
     if mod(j,100)==0
         disp(j);
@@ -123,8 +134,9 @@ for j=1:k
     if j==1  
         U0= ULr(:,1); 
         U1= ULr(:,1);  
-        F0= ones(z-2,1)*0.0001;       
-        FLin(:,j)= ones(z-2,1)*0.0001;%PHI*FD*cos(THETA*time(j));   
+       
+        F0 = Fg;
+        FLin(:,j) = Fg;
         F1= FLin(:,j);   
     else
         U0= ULr(:,j-1); 
@@ -132,9 +144,10 @@ for j=1:k
         F0= FLin(:,j-1); 
         F1= FLin(:,j);   
     end
-    FLin(:,j+1)= 0.0001*ones(z-2,1);%PHI*FD*cos(THETA*time(j+1)); 
+    
+    FLin(:,j+1) = Fg;
     F2= FLin(:,j+1); 
-    F= Beta*F2 + epsilon*F1 + delta*F0;   
+    F= F2; %Beta*F2 + epsilon*F1 + delta*F0;   
     U2= -inv(A1)*A2*U1 - inv(A1)*A3*U0 + deltat^2*inv(A1)*F;  
     ULr(:,j+1)= U2; 
     for i=1:z     
@@ -324,7 +337,7 @@ for j=1:k
          end
          if j==1     
              U0= UNLr(:,1); U1= UNLr(:,1);   
-             F0= zeros(z-2,1);             
+             F0= FLin(:,j);             
              FNLin(:,j)= FLin(:,j);        
              F1= FNLin(:,j);        
          else
@@ -370,9 +383,10 @@ for j=1:k
          for i1=1:z-2  
              Gr(i1)= G(i1+2);    
          end
-         FNLin(:,j+1)= FLin(:,j+1)+ Gr'; %nonlinear force vector   
+         FNLin(:,j+1)= FLin(:,j+1);%+ Gr'; %nonlinear force vector   
          F2= FNLin(:,j+1);    
-         F= Beta*F2 + epsilon*F1 + delta*F0;    
+         %F= PHI*FD*cos(THETA*time(j));
+         F = Fg; %f_constant*ones(z-2,1);%FNLin(:,j+1);%Beta*F2 + epsilon*F1 + delta*F0;    
          U2= -inv(A1NL)*A2NL*U1 - inv(A1NL)*A3NL*U0 + deltat^2*inv(A1NL)*F;  
          UNLr(:,j+1)= U2;
          for i=1:z          
